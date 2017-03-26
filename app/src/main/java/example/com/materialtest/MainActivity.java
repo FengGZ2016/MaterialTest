@@ -1,7 +1,9 @@
 package example.com.materialtest;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -10,12 +12,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private FloatingActionButton mFloatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     mToolbar= (Toolbar) findViewById(R.id.main_toolbar);
         mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView= (NavigationView) findViewById(R.id.nav_view);
+        mFloatingActionButton= (FloatingActionButton) findViewById(R.id.floatingAction_button);
         //将toolbar的实例传入
         setSupportActionBar(mToolbar);
         //获取actionbar
@@ -75,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
             //设置一个导航栏图标
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
         }
+
+        //解决item图标颜色问题
+        mNavigationView.setItemIconTintList(null);
     //将call的item选项设置为默认选中
     mNavigationView.setCheckedItem(R.id.item_call);
 
@@ -85,6 +93,21 @@ public class MainActivity extends AppCompatActivity {
                 //当点击任意菜单项时，关闭滑动菜单
                 mDrawerLayout.closeDrawers();
                 return true;
+            }
+        });
+
+        //给浮动按钮设置监听事件
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // Toast.makeText(MainActivity.this, "您点击了浮动按钮！！！", Toast.LENGTH_SHORT).show();
+                // 用snackbar代替Toast
+                Snackbar.make(v,"您确定要删除吗？",Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(MainActivity.this, "已取消删除操作", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
             }
         });
     }

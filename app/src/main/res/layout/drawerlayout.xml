@@ -19,6 +19,16 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             />
 
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/floatingAction_button"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/button"
+            android:elevation="8dp"
+            />
+
     </FrameLayout>
    <android.support.design.widget.NavigationView
        android:layout_width="match_parent"
