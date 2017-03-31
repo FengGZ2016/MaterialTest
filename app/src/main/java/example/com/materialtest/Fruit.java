@@ -7,7 +7,12 @@ package example.com.materialtest;
 
 public class Fruit {
     private String name;
-    private String id;
+    private int Imageid;
+
+    Fruit(String name,int Imageid){
+        this.name=name;
+        this.Imageid=Imageid;
+    }
 
     public String getName() {
         return name;
@@ -17,11 +22,11 @@ public class Fruit {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public int getImageid() {
+        return Imageid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setImageid(int imageid) {
+        Imageid = imageid;
     }
 }

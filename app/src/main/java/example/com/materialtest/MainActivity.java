@@ -6,25 +6,37 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private FloatingActionButton mFloatingActionButton;
+    private RecyclerView mRecyclerView;
+    private FruitAdapter mFruitAdapter;
+    private List<Fruit> mFruitList=new ArrayList<>();
+    private Fruit[] fruits={new Fruit("pingguo",R.drawable.pingguo),new Fruit("chengzi",R.drawable.chengzi),new Fruit("fanqie",R.drawable.fanqie),new Fruit("caomei",R.drawable.caomei)};
+    private SwipeRefreshLayout mSwipeRefreshLayout;//刷新控件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_main);
+       //setContentView(R.layout.activity_main);
         setContentView(R.layout.drawerlayout);
         initView();
     }
@@ -70,6 +82,28 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView= (NavigationView) findViewById(R.id.nav_view);
         mFloatingActionButton= (FloatingActionButton) findViewById(R.id.floatingAction_button);
+        initFruitList();
+        mRecyclerView= (RecyclerView) findViewById(R.id.recycler_view);
+        //创建布局管理器
+        GridLayoutManager manager=new GridLayoutManager(this,2);
+        //给recycleview设置布局
+        mRecyclerView.setLayoutManager(manager);
+        //初始化适配器
+        mFruitAdapter=new FruitAdapter(mFruitList);
+        //给recyclerview设置适配器
+        mRecyclerView.setAdapter(mFruitAdapter);
+
+        //初始化刷新控件
+        mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeRefresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reFreshFruit();
+            }
+        });
+
+
         //将toolbar的实例传入
         setSupportActionBar(mToolbar);
         //获取actionbar
@@ -110,5 +144,39 @@ public class MainActivity extends AppCompatActivity {
                 }).show();
             }
         });
+    }
+
+    private void reFreshFruit() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    //重新生成水果图片数据
+                        initFruitList();
+                        //通知adapter数据发生了变化
+                        mFruitAdapter.notifyDataSetChanged();
+                        //刷新事件结束后，隐藏刷新进度条
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void initFruitList() {
+        mFruitList.clear();
+        for (int i=0;i<50;i++){
+            Random mrandom=new Random();
+            //随机拿到图片
+            int index=mrandom.nextInt(fruits.length);
+            mFruitList.add(fruits[index]);
+        }
     }
 }

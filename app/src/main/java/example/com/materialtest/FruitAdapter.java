@@ -67,7 +67,7 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder>{
         //加载水果的名字
         holder.fruit_name.setText(mfruit.getName());
         //加载水果的图片
-        Glide.with(mContext).load(mfruit.getId()).into(holder.fruit_image);
+        Glide.with(mContext).load(mfruit.getImageid()).into(holder.fruit_image);
     }
 
     @Override
