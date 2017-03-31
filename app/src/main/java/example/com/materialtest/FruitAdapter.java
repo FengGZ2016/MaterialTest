@@ -1,6 +1,7 @@
 package example.com.materialtest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,7 +57,24 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder>{
             mContext=parent.getContext();
         }
         View view= LayoutInflater.from(mContext).inflate(R.layout.fruit_item,parent,false);
-        return new ViewHolder(view);
+        final ViewHolder viewHolder=new ViewHolder(view);
+
+        //给itemView的子项设置点击事件
+        viewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position=viewHolder.getAdapterPosition();
+                Fruit fruit=mFruitList.get(position);
+                Intent intent=new Intent();
+                intent.setClass(mContext,FruitActivity.class);
+                intent.putExtra("FRUIT_NAME",fruit.getName());
+                intent.putExtra("FRUIT_IMAGE_ID",fruit.getImageid());
+                mContext.startActivity(intent);
+            }
+        });
+
+
+        return viewHolder;
     }
 
 
